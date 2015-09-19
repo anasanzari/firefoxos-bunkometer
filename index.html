@@ -12,7 +12,7 @@
         <script src="js/libs/jquery.validate.min.js"></script>
         <script src="./js/libs/dynamics.min.js"></script>
         <script src="./js/libs/idbstore.min.js"></script>
-        
+
         <script src="js/libs/angular.min.js"></script>
         <script src="js/libs/angular-route.min.js"></script>
         <script src="js/libs/angular-resource.min.js"></script>
@@ -20,16 +20,16 @@
         <script src="js/libs/angular-animate.min.js"></script>
         <script src="js/libs/angular-aria.min.js"></script>
         <script src="js/libs/angular-messages.min.js"></script>
-       
+
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
         <script src="js/services.js"></script>
         <script src="js/directives.js"></script>
-        
+
         <script>
             //alert(dynamics);
         </script>
-        
+
         <style>
             .sidebarcontainer{
                 position: fixed;
@@ -41,7 +41,7 @@
                 color: #fff;
                 display: none;
             }
-            
+
             ul.sidebar{
                 width:100%;
                 padding: 0;
@@ -61,8 +61,8 @@
                 background: #826060;
                 cursor: pointer;
             }
-           
-           
+
+
             .header{
                 background: #0f0000;
                 color:#fff;
@@ -70,7 +70,7 @@
             .header h1{
                 text-align: center;
             }
-            
+
             .navbtn{
                 position: absolute;
                 z-index: 1000;
@@ -87,12 +87,28 @@
                 background: #3b3333;
                 color:#eee;
             }
-            </style>
+
+            .loader {
+                position: relative;
+                left: 50%;
+                top: 50%;
+                margin-left: -60px;
+                margin-top: -12px;
+            }
+            .dot {
+                float: left;
+                margin: 0 8px;
+                width: 24px;
+                height: 24px;
+                border-radius: 12px;
+                background: #fff;
+            }
+        </style>
 
 
     </head>
     <body ng-controller="NavCtrl">
-        
+
         <!--sidenav -->
         <div class="sidebarcontainer">
             <ul class="sidebar">
@@ -100,68 +116,40 @@
                     <a ng-click="navigate(item)">{{item.name}}</a>
                 </li>
             </ul>
-                
+
         </div>
-        
-        
-        
+
+
+
         <div  class="container-fluid">
-            
+
             <!--- Title Bar -->
             <div class="row header">
-                
+
                 <div class="navbtn">
                     <img src="images/ic_menu.png" ng-click="open()" />
                 </div>
-                
+
                 <div class="col-xs-12 col-sm-12">
                     <h1>{{title}}</h1>
                 </div>
             </div>
-            
+
             <!-- Main Container -->
             <div class="row">
                 <div ng-view class="main-container" ></div>
             </div>  
-            
+
         </div>
-            
-            
-            
+
+
+
+
+
+
+
        
-        
-        
-        
-        <!--div ng-controller="NavCtrl" >
-            <--section layout="row" flex>
-                <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
-                    <md-content>
-                        <md-list>
-                            <md-list-item ng-repeat="item in menu" ng-click="navigate(item)">
-                                <img ng-src="{{item.img}}" style="width:30px">
-                                <p>{{ item.name}}</p>
-                            </md-list-item>
-                        </md-list>
-                    </md-content>
 
-                </md-sidenav>
-
-                <div layout="column" flex>
-                    <md-toolbar layout="row" class="md-medium-tall">
-                        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleLeft()" hide-gt-md>
-                            <md-icon md-svg-icon="./images/icons/menu.svg"></md-icon>
-                        </md-button>
-                        <h1 style="text-align: center;width:100%">{{title}}</h1>
-
-                    </md-toolbar>
-
-
-                    
-                </div>
-                
-                
-            </section-->
-        
 
     </body>
 </html>

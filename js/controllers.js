@@ -4,6 +4,10 @@ var AppControllers = angular.module('AppControllers', []);
 
 AppControllers.controller('MainCtrl',
         function MainCtrl($scope, $location, $rootScope, DbService) {
+            $scope.isDone = false;
+            if(DbService.getIsLoaded()){
+              $scope.isDone = true;
+            }
             DbService.getSubjects(function (subjects) {
 
             });
@@ -281,6 +285,42 @@ AppControllers.controller('NavCtrl',
                     }
                 });
             }
+
+
+            
+            var colors = ['#EEEEEE', '#EEEEEE', '#EEEEEE'];
+            var count = 0;
+            function animateDots() {
+                count++;
+                if(count==4){
+                    $rootScope.$apply(function(){
+                        $location.path("/dashboard");
+                    })
+                    
+                    return;
+                }
+                var dots = document.querySelectorAll('.dot')
+                console.log(dots.length);
+                for (var i = 0; i < dots.length; i++) {
+                    dynamics.animate(dots[i], {
+                        translateY: -70,
+                        backgroundColor: colors[i]
+                    }, {
+                        type: dynamics.forceWithGravity,
+                        bounciness: 800,
+                        elasticity: 200,
+                        duration: 2000,
+                        delay: i * 250
+                    })
+                }
+                if(count==0) animateDots()
+                else dynamics.setTimeout(animateDots, 2500);
+            }
+
+            animateDots();
+
+
+
 
 
         }
