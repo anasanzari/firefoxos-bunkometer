@@ -37,7 +37,12 @@ appDirectives.directive('percentDisplay', function () {
                 jEle.find('.ngpercentdisplay:before').css({ 'background-color': colors[2] });
 
                 $scope.$watch('percent', function(newvalue, oldvalue){
-
+                    if(newvalue<0){
+                        var red = "#f1ccba";
+                        var redlight = "#d83b3b";
+                       jEle.find('.ngpercentdisplay').css({ 'width': side, 'height': side, 'font-size': fontSize, 'background-color': red, 'color': redlight });
+                       jEle.find('.ngpercentdisplay span').css({ 'background-color': redlight });  
+                    }
                     if (newvalue > -1 && newvalue < 101) {
                         if(newvalue <= 50) {
                             // Hide left

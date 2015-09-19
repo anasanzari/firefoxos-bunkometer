@@ -104,6 +104,8 @@ AppServices.service('DbService',
                 for (var i = 0; i < subjects.length; i++) {
                     if (subjects[i].id == id) {
                         subjects[i].total = total;
+                        console.log(subjects[i].total+":"+total);
+                        break;
                     }
                 }
 
