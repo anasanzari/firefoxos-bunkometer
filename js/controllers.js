@@ -15,18 +15,33 @@ AppControllers.controller('MainCtrl',
 
 AppControllers.controller('RecordCtrl',
         function RecordCtrl($scope,$routeParams, $location, $rootScope,DbService ) {
-            
-            $scope.name = $routeParams.subject;
-            $scope.total = $routeParams.total;
-            $scope.limit = $routeParams.limit;
+           
             $scope.id = $routeParams.id;
-            
+            var id = parseInt($scope.id);
+            var isLoaded = false;
+            var subject;
+            var sub = DbService.get(id,function(bunk){
+                subject = bunk;
+                isLoaded = true;
+                $rootScope.$apply(function(){
+                    $scope.name = subject.name;
+                    $scope.total = subject.total;
+                    $scope.limit = subject.limit;
+                });
+                
+            });
             $scope.isBunking = false;
+                  
             $scope.bunk = function(){
+                if(!isLoaded||$scope.isBunking) return;
                 $scope.isBunking = true;
-                DbService.editSubject($scope.id,$scope.name,$scope.total,$scope.limit,function(){
+                DbService.updateBunk(subject.id,subject.name,$scope.total+1,subject.limit,subject.history,function(){
                   $scope.isBunking = false;  
-                  $scope.total += 1;
+                  $rootScope.$apply(function(){
+                       $scope.total += 1;
+                       $scope.isBunking = false;
+                       DbService.updateTotal(subject.id,$scope.total);
+                  });
                 });
             }
             
@@ -47,10 +62,8 @@ AppControllers.controller('DashBoardCtrl',
            var circle = $('<div class="col-xs-4"></div>');
            var width = window.innerWidth > 480 ? 150 : window.innerWidth/3.3;
            $scope.side = Math.floor(window.innerWidth/3.3);
-           
-           
+
            if(DbService.getIsLoaded()){
-   
                DbService.getSubjects(function(subjects){
                     $scope.subjects = subjects;
                      for(var i=0;i<$scope.subjects.length;i++){
@@ -102,11 +115,11 @@ AppControllers.controller('SubjectCtrl',
                 
                 if($scope.name != ""&& $scope.limit === parseInt( $scope.limit , 10)){
                     $scope.isAdding = true;
-                    DbService.saveSubject($scope.name,$scope.limit,function(){
+                    
+                    DbService.add($scope.name,$scope.limit,function(id){
                         $rootScope.$apply(function(){
-                             var s = new Subject($scope.name,$scope.limit);
-                             s.total = 0;
-                             
+                             //(id,name,limit,total,history)
+                             var s = new Subject(id,$scope.name,$scope.limit,0,[]);
                              $scope.subjects[$scope.subjects.length] = s;
                              $scope.name = "";
                              $scope.limit = "";

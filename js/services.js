@@ -3,20 +3,19 @@
 var AppServices = angular.module('AppServices', ['ngResource']);
 
 //subject Object
-function Subject(name, limit) {
+function Subject(id,name,limit,total,history) {
+    this.id = id;
     this.name = name;
-    this.total = 0;
+    this.total = total;
     this.limit = limit;
-    this.history = "";
+    this.history = history;
 }
 
 
 AppServices.service('DbService',
         function DbService() {
 
-            var dbName = "bunkd";
-            //var dbName = "bunkdb";
-            var dbVersion = 1;
+
 
             var isLoaded = false;
             var subjects = [];
@@ -30,125 +29,132 @@ AppServices.service('DbService',
                     callback(subjects);
                 }
             }
-            var DBDeleteRequest = window.indexedDB.deleteDatabase("bunkdb");
-
-            DBDeleteRequest.onerror = function(event) {
-              console.log("Error deleting database.");
-            };
-
-            DBDeleteRequest.onsuccess = function(event) {
-              console.log("Database deleted successfully");
-
-              console.log(request.result); // should be null
-            };
-            
-            
-            
-            var db;
-            var request = indexedDB.open(dbName, dbVersion);
-
-            request.onerror = function (event) {
-                console.error("Can't open indexedDB!!!", event);
-            };
-            request.onsuccess = function (event) {
-                console.log("Database opened ok");
-                db = event.target.result;
-            };
-            
-            request.onupgradeneeded = function (event) {
-                db = event.target.result;
-                if (!db.objectStoreNames.contains(dbName)) {
-                    var objectStore = db.createObjectStore(dbName, {
-                        keyPath: "id",
-                        autoIncrement: true
-                    });
-                    objectStore.createIndex("name", "name", {
-                        unique: true
-                    });
-                   
+           
+            var bunks = new IDBStore({
+                dbVersion: 1,
+                storeName: 'bunks',
+                keyPath: 'id',
+                autoIncrement: true,
+                onStoreReady: function () {
+                    console.log('Store ready!');
+                    All();
                 }
-            };
-
-            function saveSubject(sub, limit, callback) {
-                var subject = new Subject(sub, limit);
+            });
+            function add(sub, limit, callback) {
                 if (!isLoaded) {
                     return;
                 }
-                var transaction = db.transaction([dbName], "readwrite");
-                transaction.oncomplete = function (event) {
-                    console.log("Saved");
-                };
-                transaction.onerror = function (event) {
-                    console.error("Error saving subject:", event);
-                };
-                var objectStore = transaction.objectStore(dbName);
-                var request = objectStore.put(subject);
-                
-                request.onsuccess = function (event) {
-                    console.log("Subject saved with id: " + request.result);
-                    var id = request.result;
-                    subject.id = id;
-                    subjects[subjects.length] = subject;
-                    callback();
-                };
+                var bunk = {name: sub, limit: limit, total: 0,history: []};
+                var onsuccess = function (id) {
+                    console.log('Yeah, dude inserted! insertId is: ' + id);
+                    callback(id);
+                }
+                var onerror = function (error) {
+                    console.log('Oh noes, sth went wrong!', error);
+                }
+                bunks.put(bunk, onsuccess, onerror);
+            }
+            function get(id,callback) {
+                if (!isLoaded) {
+                    return;
+                }
+                var onsuccess = function (data) {
+                    console.log('here is our dude:', data);
+                    callback(data);
+                }
+                var onerror = function (error) {
+                    console.log('Oh noes, sth went wrong!', error);
+                }
+                bunks.get(id, onsuccess, onerror);
             }
 
-            function editSubject(id,name,total,limit,callback) {
-                if(!db)return;
-                alert(id+name+total+limit);
-                var s = new Subject(name,limit);
+            function updateBunk(id, sub, total, limit, history, callback) {
+                 if (!isLoaded) {
+                    return;
+                }
+                var bunk = {id:id,name: sub, limit: limit, total: total,history: history};
+                var onsuccess = function (id) {
+                    console.log('Yeah, dude updated! id still is: ' + id);
+                    callback();
+                }
+                var onerror = function (error) {
+                    console.log('Oh noes, sth went wrong!', error);
+                }
+                bunks.put(bunk, onsuccess, onerror);
+            }
+
+            function All() {
+
+                console.log("came");
+                var onsuccess = function (data) {
+                    console.log('Here is what we have in store (' + data.length + ' items in total):');
+                    console.log(data[0]);
+                    update(data);
+                    isLoaded = true;    
+                }
+                var onerror = function (error) {
+                    console.log('Oh noes, sth went wrong!', error);
+                }
+
+                bunks.getAll(onsuccess, onerror);
+            }
+            
+            function updateTotal(id, total) {
+                
+                for(var i=0;i<subjects.length;i++){
+                    if(subjects[i].id == id){
+                        subjects[i].total = total;
+                    }
+                }
+            
+            }
+
+            /*function saveSubject(id, sub, limit, callback) {
+               
+                var data = [
+                    {id: 1, name: sub, limit: limit, history: ''},
+                ];
+                var subject = new Subject(sub, limit);
+
+                db.insert({
+                    store: table,
+                    data: data,
+                    success: function (rowsAdded, rowsFailed, objectStore, successEvent) {
+                        subjects[subjects.length] = subject;
+                        callback();
+                    },
+                    error: function (rowsAdded, rowsFailed, objectStore, failEvent) {
+
+                    }
+                });
+            }
+
+            function editSubject(id, name, total, limit, callback) {
+                if (!db)
+                    return;
+                alert(id + name + total + limit);
+                var s = new Subject(name, limit);
                 s.id = id;
                 s.limit = limit;
-                
+
                 var objectStore = db.transaction([dbName], "readwrite").objectStore(dbName);
                 var request = objectStore.put(s);
                 request.onerror = function (event) {
                 };
                 request.onsuccess = function (event) {
-                  
-                        for(var i=0;i<subjects.length;i++){
-                            if(subjects[i].name == name){
-                                subjects[i].total = total;
-                                subjects[i].limit = limit;
-                                callback();
-                            }
+
+                    for (var i = 0; i < subjects.length; i++) {
+                        if (subjects[i].name == name) {
+                            subjects[i].total = total;
+                            subjects[i].limit = limit;
+                            callback();
                         }
-                    
-                };
-
-
-            }
-
-
-            var getAll = function () {
-                if (!db) {
-                    //db not ready yet
-                    console.warn("Database is not ready yet");
-                    setTimeout(getAll, 1000);
-                    return;
-                }
-                var objectStore = db.transaction(dbName).objectStore(dbName);
-                var subs = [];
-                objectStore.openCursor().onsuccess = function (event) {
-                    var cursor = event.target.result;
-                    if (cursor) {
-                        console.log("Found memo #" + cursor.value.name + "-" + cursor.value.limit);
-                        var sub = new Subject(cursor.value.name, cursor.value.limit);
-                        sub.total = cursor.value.total;
-                        sub.id = cursor.value.id;
-                        subs[subs.length] = sub;
-                        cursor.continue();
-                    } else {
-                        //end
-                        update(subs);
-                        isLoaded = true;
                     }
+
                 };
 
-            }
-            getAll();
 
-
+            }*/
             var update = function (p) {
                 subjects = p;
                 for (var i = 0; i < callbacks.length; i++) {
@@ -164,9 +170,11 @@ AppServices.service('DbService',
             return{
                 subjects: subjects,
                 getSubjects: getSubjects,
-                saveSubject: saveSubject,
                 getIsLoaded: getIsLoaded,
-                editSubject:editSubject
+                add:add,
+                get:get,
+                updateBunk:updateBunk,
+                updateTotal:updateTotal
             }
         }
 

@@ -19,9 +19,12 @@
                 
                 <hr>
                 <h1>Added Subjects</h1>
-                <ul>
-                    <li ng-repeat="subject in subjects">{{subject.name}}</li>
-                </ul>
+                
+                <div ng-repeat="subject in subjects">
+                    <p>{{subject.name}}</p>
+                    <a ng-click="delete(subject)">Delete</a>
+                </li>
+                
                 
 
             </form>
