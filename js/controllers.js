@@ -7,10 +7,15 @@ AppControllers.controller('MainCtrl',
             $scope.isDone = false;
             if(DbService.getIsLoaded()){
               $scope.isDone = true;
+            }else{
+              DbService.getSubjects(function (subjects) {
+                $scope.isDone = true;
+                $rootScope.$apply(function(){
+                   $location.path("/dashboard"); 
+                });
+              });  
             }
-            DbService.getSubjects(function (subjects) {
-
-            });
+            
         }
 );
 
@@ -287,8 +292,8 @@ AppControllers.controller('NavCtrl',
             }
 
 
-            
-            var colors = ['#EEEEEE', '#EEEEEE', '#EEEEEE'];
+            /*-- too slow -->
+            /*var colors = ['#EEEEEE', '#EEEEEE', '#EEEEEE'];
             var count = 0;
             function animateDots() {
                 count++;
@@ -317,7 +322,7 @@ AppControllers.controller('NavCtrl',
                 else dynamics.setTimeout(animateDots, 2500);
             }
 
-            animateDots();
+            animateDots();*/
 
 
 
