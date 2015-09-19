@@ -21,6 +21,9 @@ bunkapp.config(['$routeProvider', '$locationProvider',
                 }).when('/subjects',{
                     templateUrl: 'partials/subjects.html',
                     controller: 'SubjectCtrl'
+                }).when("/record/:id/:subject/:total/:limit",{
+                    templateUrl: 'partials/record.html',
+                    controller: 'RecordCtrl'
                 });
         $locationProvider.html5Mode(false).hashPrefix('!');
     }]);
