@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="bunkapp">
+    <head>
+        <title>BunkoMeter</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="css/bootstrap.min.css" media="screen"/>
+        <link rel="stylesheet" href="css/page.css" media="screen"/>
+        <link rel="stylesheet" href="css/ngPercentDisplay.css" media="screen"/>
+
+        <script src="js/libs/jquery-1.11.3.min.js"></script>
+        <script src="js/libs/jquery.validate.min.js"></script>
+        <script src="./js/libs/dynamics.min.js"></script>
+        
+        <script src="js/libs/angular.min.js"></script>
+        <script src="js/libs/angular-route.min.js"></script>
+        <script src="js/libs/angular-resource.min.js"></script>
+        <script src="js/libs/angular-cookies.min.js"></script>
+        <script src="js/libs/angular-animate.min.js"></script>
+        <script src="js/libs/angular-aria.min.js"></script>
+        <script src="js/libs/angular-messages.min.js"></script>
+       
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/services.js"></script>
+        <script src="js/directives.js"></script>
+        
+        <script>
+            //alert(dynamics);
+        </script>
+        
+        <style>
+            .sidebarcontainer{
+                position: absolute;
+                top:0;
+                left:0;
+                min-height: 100%;
+                z-index: 1000;
+                background: #1a0202;
+                color: #fff;
+                display: none;
+            }
+            
+            ul.sidebar{
+                width:100%;
+                padding: 0;
+                margin: 0;
+            }
+            ul.sidebar li{
+                list-style: none; 
+            }
+            ul.sidebar li a{
+                display: block;
+                padding:7px 15px;
+                padding-right: 35px;
+                color: #fff;
+                text-decoration: none;
+            }
+            ul.sidebar li a:hover{
+                background: #826060;
+                cursor: pointer;
+            }
+           
+           
+            .header{
+                background: #0f0000;
+                color:#fff;
+            }
+            .header h1{
+                text-align: center;
+            }
+            
+            .navbtn{
+                position: absolute;
+                z-index: 1000;
+                top:15px;
+                left:5px;
+            }
+            .navbtn img{
+                width: 25px;
+            }
+            .navbtn img:hover{
+                cursor: pointer;
+            }
+            body{
+                background: #3b3333;
+                color:#eee;
+            }
+            </style>
+
+
+    </head>
+    <body ng-controller="NavCtrl">
+        
+        <!--sidenav -->
+        <div class="sidebarcontainer">
+            <ul class="sidebar">
+                <li ng-repeat="item in menu">
+                    <a ng-click="navigate(item)">{{item.name}}</a>
+                </li>
+            </ul>
+                
+        </div>
+        
+        
+        
+        <div  class="container-fluid">
+            
+            <!--- Title Bar -->
+            <div class="row header">
+                
+                <div class="navbtn">
+                    <img src="images/ic_menu.png" ng-click="open()" />
+                </div>
+                
+                <div class="col-xs-12 col-sm-12">
+                    <h1>{{title}}</h1>
+                </div>
+            </div>
+            
+            <!-- Main Container -->
+            <div class="row">
+                <div ng-view class="main-container" ></div>
+            </div>  
+            
+        </div>
+            
+            
+            
+       
+        
+        
+        
+        <!--div ng-controller="NavCtrl" >
+            <--section layout="row" flex>
+                <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+                    <md-content>
+                        <md-list>
+                            <md-list-item ng-repeat="item in menu" ng-click="navigate(item)">
+                                <img ng-src="{{item.img}}" style="width:30px">
+                                <p>{{ item.name}}</p>
+                            </md-list-item>
+                        </md-list>
+                    </md-content>
+
+                </md-sidenav>
+
+                <div layout="column" flex>
+                    <md-toolbar layout="row" class="md-medium-tall">
+                        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleLeft()" hide-gt-md>
+                            <md-icon md-svg-icon="./images/icons/menu.svg"></md-icon>
+                        </md-button>
+                        <h1 style="text-align: center;width:100%">{{title}}</h1>
+
+                    </md-toolbar>
+
+
+                    
+                </div>
+                
+                
+            </section-->
+        
+
+    </body>
+</html>
