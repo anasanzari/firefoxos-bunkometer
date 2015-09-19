@@ -21,9 +21,12 @@
                 <h1>Added Subjects</h1>
                 
                 <div ng-repeat="subject in subjects">
-                    <p>{{subject.name}}</p>
-                    <a ng-click="delete(subject)">Delete</a>
-                </li>
+                    <div>
+                    <a ng-click="delete(subject)" class="btn btn-default" style="float: right">Delete</a>
+                    <h3>{{subject.name}}</h3>
+                    </div>
+                </div>
+                
                 
                 
 

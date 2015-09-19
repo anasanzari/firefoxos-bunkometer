@@ -3,7 +3,7 @@
 var AppServices = angular.module('AppServices', ['ngResource']);
 
 //subject Object
-function Subject(id,name,limit,total,history) {
+function Subject(id, name, limit, total, history) {
     this.id = id;
     this.name = name;
     this.total = total;
@@ -29,7 +29,7 @@ AppServices.service('DbService',
                     callback(subjects);
                 }
             }
-           
+
             var bunks = new IDBStore({
                 dbVersion: 1,
                 storeName: 'bunks',
@@ -44,7 +44,7 @@ AppServices.service('DbService',
                 if (!isLoaded) {
                     return;
                 }
-                var bunk = {name: sub, limit: limit, total: 0,history: []};
+                var bunk = {name: sub, limit: limit, total: 0, history: []};
                 var onsuccess = function (id) {
                     console.log('Yeah, dude inserted! insertId is: ' + id);
                     callback(id);
@@ -54,7 +54,7 @@ AppServices.service('DbService',
                 }
                 bunks.put(bunk, onsuccess, onerror);
             }
-            function get(id,callback) {
+            function get(id, callback) {
                 if (!isLoaded) {
                     return;
                 }
@@ -69,10 +69,10 @@ AppServices.service('DbService',
             }
 
             function updateBunk(id, sub, total, limit, history, callback) {
-                 if (!isLoaded) {
+                if (!isLoaded) {
                     return;
                 }
-                var bunk = {id:id,name: sub, limit: limit, total: total,history: history};
+                var bunk = {id: id, name: sub, limit: limit, total: total, history: history};
                 var onsuccess = function (id) {
                     console.log('Yeah, dude updated! id still is: ' + id);
                     callback();
@@ -90,7 +90,7 @@ AppServices.service('DbService',
                     console.log('Here is what we have in store (' + data.length + ' items in total):');
                     console.log(data[0]);
                     update(data);
-                    isLoaded = true;    
+                    isLoaded = true;
                 }
                 var onerror = function (error) {
                     console.log('Oh noes, sth went wrong!', error);
@@ -98,63 +98,41 @@ AppServices.service('DbService',
 
                 bunks.getAll(onsuccess, onerror);
             }
-            
+
             function updateTotal(id, total) {
-                
-                for(var i=0;i<subjects.length;i++){
-                    if(subjects[i].id == id){
+
+                for (var i = 0; i < subjects.length; i++) {
+                    if (subjects[i].id == id) {
                         subjects[i].total = total;
                     }
                 }
-            
+
             }
 
-            /*function saveSubject(id, sub, limit, callback) {
+            function deleteBunk(id,callback){
                
-                var data = [
-                    {id: 1, name: sub, limit: limit, history: ''},
-                ];
-                var subject = new Subject(sub, limit);
-
-                db.insert({
-                    store: table,
-                    data: data,
-                    success: function (rowsAdded, rowsFailed, objectStore, successEvent) {
-                        subjects[subjects.length] = subject;
-                        callback();
-                    },
-                    error: function (rowsAdded, rowsFailed, objectStore, failEvent) {
-
-                    }
-                });
-            }
-
-            function editSubject(id, name, total, limit, callback) {
-                if (!db)
-                    return;
-                alert(id + name + total + limit);
-                var s = new Subject(name, limit);
-                s.id = id;
-                s.limit = limit;
-
-                var objectStore = db.transaction([dbName], "readwrite").objectStore(dbName);
-                var request = objectStore.put(s);
-                request.onerror = function (event) {
-                };
-                request.onsuccess = function (event) {
-
-                    for (var i = 0; i < subjects.length; i++) {
-                        if (subjects[i].name == name) {
-                            subjects[i].total = total;
-                            subjects[i].limit = limit;
-                            callback();
+                var onsuccess = function (result) {
+                    if (result !== false) {
+                        console.log('deletion successful!');
+                        var subs = [];
+                        for(var i=0;i<subjects.length;i++){
+                            if(subjects[i].id!=id){
+                                subs[subs.length] = subjects[i];
+                            }
                         }
+                        subjects = subs;
+                        callback();
                     }
+                }
+                var onerror = function (error) {
+                    console.log('Oh noes, sth went wrong!', error);
+                }
 
-                };
+                bunks.remove(id, onsuccess, onerror);
+            }
+            
+            
 
-
-            }*/
             var update = function (p) {
                 subjects = p;
                 for (var i = 0; i < callbacks.length; i++) {
@@ -171,10 +149,11 @@ AppServices.service('DbService',
                 subjects: subjects,
                 getSubjects: getSubjects,
                 getIsLoaded: getIsLoaded,
-                add:add,
-                get:get,
-                updateBunk:updateBunk,
-                updateTotal:updateTotal
+                add: add,
+                get: get,
+                updateBunk: updateBunk,
+                updateTotal: updateTotal,
+                deleteBunk:deleteBunk
             }
         }
 

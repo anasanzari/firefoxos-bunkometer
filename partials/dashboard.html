@@ -15,8 +15,12 @@
                             <h2>Bunks:{{subject.total}} Limit:{{subject.limit}}</h2>
                             <a class="btn btn-default" href="#!/record/{{subject.id}}/">Bunk</a>
                         </div>
-                        
                     </div>
+                </div>
+                
+                <div class="row" ng-show="noSubs" style="padding-top: 35px;text-align: center">
+                    <p>You dont have any subjects to show.</p>
+                    <a href="#!/subjects" class="btn btn-default" >Add Subject</a>
                 </div>
                 
             </div>

@@ -4,11 +4,9 @@ var AppControllers = angular.module('AppControllers', []);
 
 AppControllers.controller('MainCtrl',
         function MainCtrl($scope, $location, $rootScope,DbService ) {
-            
-            DbService.getSubjects(function(subjects){
-                $scope.subjects = subjects;
-            });
-
+             DbService.getSubjects(function(subjects){
+                 
+             });
         }
 );
 
@@ -54,10 +52,12 @@ AppControllers.controller('DashBoardCtrl',
           
            $scope.subjects = DbService.subjects;
            
+           $scope.noSubs = false;
+           
            var blue = "#badbf1";
            var bluelight = "#3A98D8";
-           var red = "#d83b3b";
-           var redlight = "#f1ccba";
+           var red = "#f1ccba";
+           var redlight = "#d83b3b";
            
            var circle = $('<div class="col-xs-4"></div>');
            var width = window.innerWidth > 480 ? 150 : window.innerWidth/3.3;
@@ -66,15 +66,33 @@ AppControllers.controller('DashBoardCtrl',
            if(DbService.getIsLoaded()){
                DbService.getSubjects(function(subjects){
                     $scope.subjects = subjects;
+                    if(subjects.length==0){
+                       $scope.noSubs = true; 
+                    }
                      for(var i=0;i<$scope.subjects.length;i++){
                          var a =  $scope.subjects[i];
-                         $scope.subjects[i].percent = Math.floor(100*(a.total)/a.limit);
+                         var percent,cl,cllight;
+                         if(a.total<=a.limit){
+                             percent = Math.floor(100*(a.total)/a.limit);
+                             cl = blue;
+                             cllight = bluelight;
+                         }else{
+                             percent = Math.floor(100*(a.total-a.limit)/a.limit);
+                             cl = red;
+                             cllight = redlight;
+                         }
+                         $scope.subjects[i].percent = percent;
+                         $scope.subjects[i].bold = cl;
+                         $scope.subjects[i].light = cllight;
                      }
                });
            } else{
                DbService.getSubjects(function(subjects){
                 $rootScope.$apply(function(){
                      $scope.subjects = subjects;
+                     if(subjects.length==0){
+                       $scope.noSubs = true; 
+                    }
                      for(var i=0;i<$scope.subjects.length;i++){
                          var a =  $scope.subjects[i];
                          var percent,cl,cllight;
@@ -128,6 +146,17 @@ AppControllers.controller('SubjectCtrl',
                     }); 
                 }
             }
+            
+            $scope.delete = function(subject){
+                DbService.deleteBunk(subject.id,function(){
+                   DbService.getSubjects(function(subjects){
+                        $rootScope.$apply(function(){
+                          $scope.subjects = subjects;
+                        });
+                    }); 
+                });
+            }
+            
             $scope.subjects = [];
             if(DbService.getIsLoaded()){
                  DbService.getSubjects(function(subjects){
