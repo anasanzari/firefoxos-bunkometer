@@ -11,6 +11,24 @@ AppControllers.controller('MainCtrl',
 );
 
 
+AppControllers.controller('HistoryCtrl',
+        function HistoryCtrl($scope, $routeParams, $location, $rootScope, DbService) {
+            $scope.subjects = [];
+            if (DbService.getIsLoaded()) {
+                DbService.getSubjects(function (subjects) {
+                    $scope.subjects = subjects;
+                });
+            } else {
+                DbService.getSubjects(function (subjects) {
+                    $rootScope.$apply(function () {
+                        $scope.subjects = subjects;
+                    });
+                });
+            }
+        }
+);
+
+
 AppControllers.controller('RecordCtrl',
         function RecordCtrl($scope, $routeParams, $location, $rootScope, DbService) {
 
@@ -101,7 +119,7 @@ AppControllers.controller('DashBoardCtrl',
                                 cl = blue;
                                 cllight = bluelight;
                             } else {
-                                percent = - Math.floor(100 * (a.total - a.limit) / a.limit);
+                                percent = -Math.floor(100 * (a.total - a.limit) / a.limit);
                                 cl = red;
                                 cllight = redlight;
                             }
@@ -119,6 +137,9 @@ AppControllers.controller('DashBoardCtrl',
                     return;
                 $scope.isBunking = true;
                 console.log("bunking" + JSON.stringify(subject));
+
+                subject.history[subject.history.length] = new Date();
+
                 DbService.updateBunk(subject.id, subject.name, subject.total + 1, subject.limit, subject.history, function () {
                     $scope.isBunking = false;
                     $rootScope.$apply(function () {
@@ -127,14 +148,14 @@ AppControllers.controller('DashBoardCtrl',
                             if ($scope.subjects[i].id == subject.id) {
                                 var a = $scope.subjects[i];
                                 var percent, cl, cllight;
-                                
+
                                 if (a.total <= a.limit) {
                                     percent = Math.floor(100 * (a.total) / a.limit);
                                     cl = blue;
                                     cllight = bluelight;
                                     console.log("blue");
                                 } else {
-                                    percent = - Math.floor(100 * (a.total - a.limit) / a.limit);
+                                    percent = -Math.floor(100 * (a.total - a.limit) / a.limit);
                                     cl = red;
                                     cllight = redlight;
                                     console.log("red");
@@ -222,6 +243,7 @@ AppControllers.controller('NavCtrl',
             $scope.menu = [
                 {name: 'Bunkometer', link: 'dashboard', img: './images/icons/home153.png'},
                 {name: 'Subjects', link: 'subjects', img: './images/icons/home153.png'},
+                {name: 'Bunk History', link: 'history', img: './images/icons/home153.png'}
             ]
 
             $scope.title = "Bunkometer";
