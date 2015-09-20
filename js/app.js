@@ -24,6 +24,9 @@ bunkapp.config(['$routeProvider', '$locationProvider',
                 }).when('/history',{
                     templateUrl: 'partials/history.html',
                     controller: 'HistoryCtrl'
+                }).when('/themes',{
+                    templateUrl: 'partials/themes.html',
+                    controller: 'ThemeCtrl'
                 });
         $locationProvider.html5Mode(false).hashPrefix('!');
     }]);

@@ -5,17 +5,48 @@ var AppControllers = angular.module('AppControllers', []);
 AppControllers.controller('MainCtrl',
         function MainCtrl($scope, $location, $rootScope, DbService) {
             $scope.isDone = false;
-            if(DbService.getIsLoaded()){
-              $scope.isDone = true;
-            }else{
-              DbService.getSubjects(function (subjects) {
+            if (DbService.getIsLoaded()) {
                 $scope.isDone = true;
-                $rootScope.$apply(function(){
-                   $location.path("/dashboard"); 
+            } else {
+                DbService.getSubjects(function (subjects) {
+                    $scope.isDone = true;
+                    $rootScope.$apply(function () {
+                        $location.path("/dashboard");
+                    });
                 });
-              });  
             }
+
+        }
+);
+
+
+AppControllers.controller('ThemeCtrl',
+        function ThemeCtrl($scope, $location, $rootScope) {
+
+            $scope.themes = [
+                {name: "Default", background: '#3b3333', sidebar: '#1a0202', sidebar_a: '#fff', sidebar_a_hover: '#826060', header: '#0f0000', body: '#3b3333', dot: '#fff', textcolor: '#fff'},
+                {name: "Retro", background: '#eee', sidebar: '#fff', sidebar_a: '#000', sidebar_a_hover: '#ccc', header: '#ACABBA', body: '#eee', dot: '#000', textcolor: '#000'},
+                {name: "Blue", background: '#0097A7', sidebar: '#455A64', sidebar_a: '#fff', sidebar_a_hover: '#006a75', header: '#006a75', body: '#0097A7', dot: '#fff', textcolor: '#fff'},
+                {name: "Red", background: '#F44336', sidebar: '#00E676', sidebar_a: '#fff', sidebar_a_hover: '#00c163', header: '#ef1f00', body: '#F44336', dot: '#fff', textcolor: '#fff'}
             
+            ];
+
+            $scope.changeTheme = function (theme) {
+                // var theme = themes[i];
+                $(".sidebarcontainer").css("background", theme.sidebar);
+                $("body").css("color", theme.textcolor);
+                $("ul.sidebar li a").css("color", theme.sidebar_a);
+                //$("ul.sidebar li a:hover").css("background", theme.sidebar_a_hover);
+                $("ul.sidebar li a").hover(function () {
+                    $(this).css("background-color", theme.sidebar_a_hover);
+                }, function(){
+                    $(this).css("background-color", "");
+                });
+                $(".header").css("background", theme.header);
+                $("body").css("background", theme.body);
+                $(".dot").css("background", theme.dot);
+            }
+
         }
 );
 
@@ -252,7 +283,8 @@ AppControllers.controller('NavCtrl',
             $scope.menu = [
                 {name: 'Bunkometer', link: 'dashboard', img: './images/icons/home153.png'},
                 {name: 'Subjects', link: 'subjects', img: './images/icons/home153.png'},
-                {name: 'Bunk History', link: 'history', img: './images/icons/home153.png'}
+                {name: 'Bunk History', link: 'history', img: './images/icons/home153.png'},
+                {name: 'Themes', link: 'themes', img: './images/icons/home153.png'}
             ]
 
             $scope.title = "Bunkometer";
@@ -293,36 +325,36 @@ AppControllers.controller('NavCtrl',
 
 
             /*-- too slow -->
-            /*var colors = ['#EEEEEE', '#EEEEEE', '#EEEEEE'];
-            var count = 0;
-            function animateDots() {
-                count++;
-                if(count==4){
-                    $rootScope.$apply(function(){
-                        $location.path("/dashboard");
-                    })
-                    
-                    return;
-                }
-                var dots = document.querySelectorAll('.dot')
-                console.log(dots.length);
-                for (var i = 0; i < dots.length; i++) {
-                    dynamics.animate(dots[i], {
-                        translateY: -70,
-                        backgroundColor: colors[i]
-                    }, {
-                        type: dynamics.forceWithGravity,
-                        bounciness: 800,
-                        elasticity: 200,
-                        duration: 2000,
-                        delay: i * 250
-                    })
-                }
-                if(count==0) animateDots()
-                else dynamics.setTimeout(animateDots, 2500);
-            }
-
-            animateDots();*/
+             /*var colors = ['#EEEEEE', '#EEEEEE', '#EEEEEE'];
+             var count = 0;
+             function animateDots() {
+             count++;
+             if(count==4){
+             $rootScope.$apply(function(){
+             $location.path("/dashboard");
+             })
+             
+             return;
+             }
+             var dots = document.querySelectorAll('.dot')
+             console.log(dots.length);
+             for (var i = 0; i < dots.length; i++) {
+             dynamics.animate(dots[i], {
+             translateY: -70,
+             backgroundColor: colors[i]
+             }, {
+             type: dynamics.forceWithGravity,
+             bounciness: 800,
+             elasticity: 200,
+             duration: 2000,
+             delay: i * 250
+             })
+             }
+             if(count==0) animateDots()
+             else dynamics.setTimeout(animateDots, 2500);
+             }
+             
+             animateDots();*/
 
 
 
