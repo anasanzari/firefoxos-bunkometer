@@ -25,14 +25,16 @@ AppControllers.controller('ThemeCtrl',
 
             $scope.themes = [
                 {name: "Default", background: '#3b3333', sidebar: '#1a0202', sidebar_a: '#fff', sidebar_a_hover: '#826060', header: '#0f0000', body: '#3b3333', dot: '#fff', textcolor: '#fff'},
-                {name: "Retro", background: '#eee', sidebar: '#fff', sidebar_a: '#000', sidebar_a_hover: '#ccc', header: '#ACABBA', body: '#eee', dot: '#000', textcolor: '#000'},
+                {name: "Retro", background: '#202F42', sidebar: '#322f69', sidebar_a: '#fff', sidebar_a_hover: '#7999c2', header: '#322f69', body: '#202F42', dot: '#fff', textcolor: '#fff'},
                 {name: "Blue", background: '#0097A7', sidebar: '#455A64', sidebar_a: '#fff', sidebar_a_hover: '#006a75', header: '#006a75', body: '#0097A7', dot: '#fff', textcolor: '#fff'},
-                {name: "Red", background: '#F44336', sidebar: '#00E676', sidebar_a: '#fff', sidebar_a_hover: '#00c163', header: '#ef1f00', body: '#F44336', dot: '#fff', textcolor: '#fff'}
+                {name: "Green", background: '#02CA74', sidebar: '#019756', sidebar_a: '#fff', sidebar_a_hover: '#05c673', header: '#019756', body: '#02CA74', dot: '#fff', textcolor: '#fff'}
             
             ];
 
             $scope.changeTheme = function (theme) {
                 // var theme = themes[i];
+                //localStorage.setItem("theme", theme);
+                
                 $(".sidebarcontainer").css("background", theme.sidebar);
                 $("body").css("color", theme.textcolor);
                 $("ul.sidebar li a").css("color", theme.sidebar_a);
